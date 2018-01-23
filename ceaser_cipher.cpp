@@ -14,25 +14,35 @@
 
 using namespace std;
 
-// Encrypting
-// e(x) = (x+k)(mod 26)
-
-// where x is the letter you're encrypting/decrypting
-// and the key is the number of letters you're shifting
-
-// Decrypting
-// e(x) = (x - k)(mod 26)
-
-// turn the alphabet into digits 0-25 first
-
+// G L O B A L S
 int MAX_KEY_SIZE = 26;
 
+// user input for mode (decryption or encryption)
+string getMode(){
+
+	string mode;
+	while(true){
+		cout << "[E]ncryption or [D]ecryption?" << endl;
+		getline(cin, mode);
+		if((mode == "E") || (mode == "D")){
+			cout << "Mode received: " << mode << endl;
+			return mode;
+		} else{
+			cout << "Enter either E for Encryption or D for Decryption" << endl;
+		}
+	}
+}
+
+// remove the strings so it's eaiser to work with
 string removeSpaces(string str){
+
 	str.erase(remove(str.begin(), str.end(), ' '), str.end());
 	return str;
 }	
 
+// user input for message
 string getMessage(){
+
 	// prompt user for message
 	cout << "Enter you message: " << endl;
 	string m; 
@@ -45,7 +55,9 @@ string getMessage(){
 	return m;	
 }
 
+// user input for key
 int getKey(){
+
 	string Skey;
 	int key;
 	do{
@@ -57,10 +69,63 @@ int getKey(){
 	return key;
 }
 
-int main(){
-	string message;
-	message = getMessage();
-	int key = getKey();
+// encrypts or decrypts
+string translateMessage(string mode, string message, int key){
 
+	int size = message.length();
+	if(mode == "D") key = -key;
+	string new_m;
+
+	for(int i = 0; i < size; ++i){ 
+		if(isupper(message[i])){
+			int num = int(message[i]);
+			num += key;
+			if(num > int('Z')) num -= 26;
+			else if(num < int('A')) num += 26;
+			new_m[i] =+ char(num);
+		} else{
+			new_m[i] += message[i];
+		}
+	}
+
+	return new_m; 
+}
+
+int main(){
+
+	string message = getMessage();
+	int key = getKey();
+	string mode = getMode();
+	string M = translateMessage(mode, message, key);	
+
+	if(mode == "D"){
+		cout << "Decrypted message: " << M << endl;
+		for(int i = 0; i < message.length(); ++i){
+        	        cout << M[i];
+	        }
+
+	}
+	else{
+		cout << "Encrypted message: " << M << endl;
+		for(int i = 0; i < message.length(); ++i){
+	                cout << M[i];
+        	}
+
+	}	
+	
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
